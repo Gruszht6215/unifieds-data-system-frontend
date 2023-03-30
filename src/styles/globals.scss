@@ -1,0 +1,33 @@
+@import "~tailwindcss/base";
+@import "~tailwindcss/components";
+@import "~tailwindcss/utilities";
+
+* {
+    box-sizing: border-box;
+}
+
+@layer components {
+    .primary-bg-color {
+        @apply bg-gradient-to-r from-sky-600 to-cyan-400;
+    }
+    .primary-bg-via-color {
+        @apply bg-gradient-to-r from-sky-600 via-cyan-400 to-sky-400;
+    }
+    .secondary-bg-color {
+        @apply bg-gradient-to-r from-violet-700 to-purple-500;
+    }
+    .tertiary-bg-color {
+        @apply bg-gradient-to-r from-orange-600 to-amber-400;
+    }
+}
+
+@keyframes cursor {
+    0%,
+    40% {
+        opacity: 1;
+    }
+    60%,
+    100% {
+        opacity: 0;
+    }
+}
