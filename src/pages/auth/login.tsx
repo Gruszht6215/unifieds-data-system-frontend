@@ -2,32 +2,53 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useSession, signIn, getCsrfToken } from "next-auth/react"
 import CobeBackground from '../../components/login/CobeBackground'
+import SVG from 'react-inlinesvg';
 
 type Props = {
     csrfToken: any
 }
 
-async function submitLoginHandler(e: any) {
-    e.preventDefault()
-    const redirectUrl = process.env.NEXT_PUBLIC_FRONT_BASE_URL + "/dashboard"
-    await signIn("credentials", {
-        username: e.target.username.value,
-        password: e.target.password.value,
-        callbackUrl: redirectUrl
-    }).catch((err) => {
-        console.error(err)
-    })
-}
-
 export default function Login({ csrfToken }: Props) {
     const { data: session } = useSession()
     const [isShowPassword, setIsShowPassword] = useState(false);
+    const [captcha, setCaptcha] = useState<any>({ text: "", svg: "" });
 
     useEffect(() => {
         if (session) {
             window.location.href = "/dashboard"
         }
     }, [session])
+
+    useEffect(() => {
+        fetchCaptcha()
+    }, [])
+
+    const handleRefresh = async () => {
+        await fetchCaptcha()
+    };
+
+    const fetchCaptcha = async () => {
+        const res = await fetch('/api/captcha');
+        const data = await res.json();
+        setCaptcha(data);
+    };
+
+    async function submitLoginHandler(e: any) {
+        e.preventDefault()
+        if (e.target.captchaInput.value !== captcha!.text) {
+            e.target.captchaInput.value = ""
+            alert("Captcha is not correct")
+            return
+        }
+        const redirectUrl = process.env.NEXT_PUBLIC_FRONT_BASE_URL + "/dashboard"
+        await signIn("credentials", {
+            username: e.target.username.value,
+            password: e.target.password.value,
+            callbackUrl: redirectUrl
+        }).catch((err) => {
+            console.error(err)
+        })
+    }
 
     if (session) {
         return (
@@ -104,6 +125,22 @@ export default function Login({ csrfToken }: Props) {
                                         id="password" type={isShowPassword ? "text" : "password"} placeholder="Password" />
                                 </div>
                                 {/* <p className="text-red-500 text-xs italic">Please fill the password field.</p> */}
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="captcha" className="block text-gray-500 text-sm font-bold mb-2">
+                                    Please enter the characters you see in the image below:
+                                </label>
+                                <div className='flex justify-between'>
+                                    {captcha && <SVG src={`data:image/svg+xml;utf8,${captcha.data}`} className="mb-2" />}
+                                    <div className="flex items-center justify-center">
+                                        <button type="button" onClick={handleRefresh} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                                <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0112.548-3.364l1.903 1.903h-3.183a.75.75 0 100 1.5h4.992a.75.75 0 00.75-.75V4.356a.75.75 0 00-1.5 0v3.18l-1.9-1.9A9 9 0 003.306 9.67a.75.75 0 101.45.388zm15.408 3.352a.75.75 0 00-.919.53 7.5 7.5 0 01-12.548 3.364l-1.902-1.903h3.183a.75.75 0 000-1.5H2.984a.75.75 0 00-.75.75v4.992a.75.75 0 001.5 0v-3.18l1.9 1.9a9 9 0 0015.059-4.035.75.75 0 00-.53-.918z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="text" name="captchaInput" id="captchaInput" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                             </div>
                             <div className="flex items-center justify-center">
                                 <button className="w-full primary-bg-via-color hover:primary-bg-color text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline

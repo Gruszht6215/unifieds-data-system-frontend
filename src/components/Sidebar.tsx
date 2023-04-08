@@ -20,9 +20,6 @@ export default function Sidebar({ }: Props) {
         if (router.pathname === router.asPath) {
             let pathArr = router.pathname.split("/");
             setSelectedMenu(pathArr[1]);
-            // var jwt = require('jsonwebtoken');
-            // var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
-            // console.log(token)
         }
     }, [router, router.asPath]);
 
@@ -39,8 +36,7 @@ export default function Sidebar({ }: Props) {
                     <div className="mt-8 text-center">
                         <Image src={'/admin_profile.svg'}
                             alt="" width="0" height="0" priority className="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28
-                            ring-offset-2 ring-4 ring-cyan-600"
-                        />
+                            ring-offset-2 ring-4 ring-cyan-600" />
                         <h5 className="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">
                             {session?.user.Role === "admin" ? "Data Admin" : "Data Consumer"}
                         </h5>

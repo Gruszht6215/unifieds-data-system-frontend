@@ -40,7 +40,7 @@ export default function Topbar({ }: Props) {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
-                    <Link href={'/'}>
+                    <Link href={'/dashboard'}>
                         <div className="primary-bg-color rounded-l-full flex space-x-4 pl-4 py-3 flex items-center space-x-4 text-black font-bold">
                             <div className='bg-black rounded-l-full p-1'>
                                 <h1 className="px-1 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-xl text-transparent font-black">

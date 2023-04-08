@@ -11,7 +11,6 @@ const initialState: ConnectionProfileState = {
     connectionProfiles: [],
 };
 
-//dispatch คือการส่งค่าไปยัง reducer
 export const fetchConnectionProfiles = createAsyncThunk(
     'connectionProfile/fetchConnectionProfiles',
     async () => {
@@ -51,12 +50,6 @@ export const connectionProfileSlice = createSlice({
     name: 'connectionProfile',
     initialState,
     reducers: {
-        // addConnectionProfile: (state: ConnectionProfileState, action: PayloadAction<ConnectionProfile>) => {
-        //     state.connectionProfiles.push(action.payload);
-        // }
-        // deleteConnectionProfile: (state: ConnectionProfileState) => {
-        //     state.connectionProfiles = [];
-        // }
     },
     extraReducers(builder) {
         builder.addCase(fetchConnectionProfiles.fulfilled, (state, action) => {
@@ -88,6 +81,5 @@ export const connectionProfileSlice = createSlice({
     },
 });
 
-// export const { /*addConnectionProfile*/deleteConnectionProfile } = connectionProfileSlice.actions;
 export const connectionProfileSelector = (store: RootState) => store.connectionProfileReducer;
 export default connectionProfileSlice.reducer;
